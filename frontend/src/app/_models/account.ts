@@ -1,11 +1,14 @@
 import { Role } from './role';
-export class Account {
-    id?: number;     // string or number
+
+export interface Account {
+    id: string;
     title?: string;
-    firstName?: string;
-    lastName?: string;
-    email?: string;
-    role?: Role;
+    firstName: string;
+    lastName: string;
+    email: string;
+    role: string;
+    isActive: boolean;
+    isToggling?: boolean;
     jwtToken?: string;
     dateCreated?: string;
     isVerified?: boolean;
@@ -14,8 +17,4 @@ export class Account {
     password?: string;
     resetToken?: string; 
     resetTokenExpires?: string;
-
-    constructor() {
-        this.refreshTokens = []; 
-    }
 }
