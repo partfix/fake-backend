@@ -10,6 +10,10 @@ export class ListComponent implements OnInit {
   constructor(private accountService: AccountService) {}
 
   ngOnInit() {
+    this.loadAccounts();
+  }
+
+  private loadAccounts() {
     this.accountService
       .getAll()
       .pipe(first())
@@ -18,11 +22,6 @@ export class ListComponent implements OnInit {
 
   deleteAccount(id: string) {
     const account = this.accounts.find((x) => x.id === id);
-
-    // Check if the account role is Admin or User - if so, don't allow deletion
-    if (account.role === 'Admin' || account.role === 'User') {
-      return;
-    }
 
     account.isDeleting = true;
     this.accountService
@@ -33,8 +32,22 @@ export class ListComponent implements OnInit {
       );
   }
 
-  // Helper method to determine if delete button should be shown
-  canDeleteAccount(account: any): boolean {
-    return account.role !== 'Admin' && account.role !== 'User';
+  toggleAccountStatus(account: any) {
+    account.isToggling = true;
+    const newStatus = !account.isActive;
+
+    this.accountService
+      .updateStatus(account.id, newStatus)
+      .pipe(first())
+      .subscribe({
+        next: () => {
+          account.isActive = newStatus;
+          account.isToggling = false;
+        },
+        error: error => {
+          console.error('Error updating account status:', error);
+          account.isToggling = false;
+        }
+      });
   }
 }

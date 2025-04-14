@@ -100,6 +100,10 @@ export class AccountService {
       }));
   }
 
+  updateStatus(id: string, isActive: boolean) {
+    return this.http.patch(`${environment.apiUrl}/accounts/${id}/status`, { isActive });
+  }
+
   private refreshTokenTimeout: any;
 
   private startRefreshTokenTimer() {
